@@ -5,10 +5,8 @@ import geocoder
 import requests
 import os
 import openai
-
 from django.contrib.auth.views import PasswordResetConfirmView
 from django.contrib.auth.decorators import login_required
-from .models import Schedule
 from .forms import ScheduleForm, PreferenceForm
 from django.contrib import messages
 from django.http import HttpResponseBadRequest
@@ -16,10 +14,27 @@ import math
 
 openai.api_key = 'YOUR_API_KEY'
 
+import openai
+from .models import Hospital
+
+def get_category(probable_disease):
+    hospital_categories = Hospital.CAT
+    categories_list = [cat[0] for cat in hospital_categories]
+    prompt = f"Probable disease: {probable_disease}\nHospital specializations: {', '.join(categories_list)}\nRecommended category:"
+    response = openai.Completion.create(
+        engine="davinci",
+        prompt=prompt,
+        max_tokens=5,
+        temperature=2
+    )
+
+    recommended_category = response.choices[0].text.strip()
+    return recommended_category
+
+
 def get_probable_disease(gender, symptoms):
     prompt = f"Patient gender: {gender}\nSymptoms: {symptoms}\nProbable disease:"
 
-    # Request prediction from OpenAI GPT-3.5
     response = openai.Completion.create(
         engine="davinci",
         prompt=prompt,
@@ -224,9 +239,9 @@ def sym_map_view(request):
             latitude = geolocator.lat
             longitude = geolocator.lng
         probable_disease = get_probable_disease(gender=gender, symptoms=symptoms)
-        # related_category = get_category(probable_disease=probable_disease)
-        # related_category = related_category.strip()
-        # cat = related_category
+        related_category = get_category(probable_disease=probable_disease)
+        related_category = related_category.strip()
+        cat = related_category
         # create a folium map centered on the location
         map = folium.Map(location=[latitude, longitude], zoom_start=11)    
         # add a marker at the location
