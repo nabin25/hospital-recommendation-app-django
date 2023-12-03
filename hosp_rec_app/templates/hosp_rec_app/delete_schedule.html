@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Delete Schedule</h1>
+  <p>Are you sure you want to delete this schedule?</p>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit">Yes, delete it</button>
+    <a href="{% url 'schedule_list' %}">No, go back</a>
+  </form>
+{% endblock %}

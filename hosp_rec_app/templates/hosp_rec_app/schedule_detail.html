@@ -1,0 +1,27 @@
+{% extends 'hosp_rec_app/base.html' %}
+
+{% block content %}
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <h1>Edit Schedule</h1>
+      <hr>
+      <br>
+      <form method="POST" class="form-inline">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-floppy-disk"></span> Save Changes</button>
+        <a href="{% url 'schedule_list' %}" class="btn btn-default"><span class="glyphicon glyphicon-remove"></span> Cancel</a>
+      </form>
+      <br>
+      <hr>
+      <form action="{% url 'schedule_delete' pk=schedule.pk %}" method="POST" style="display: inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Delete Schedule</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

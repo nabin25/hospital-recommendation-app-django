@@ -1,0 +1,240 @@
+
+{% load static %}
+<head>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .navbar {
+            background: rgba(255, 255, 255, 0.5);
+            border: none;
+        }
+    .navbar-right {
+      padding-right: 20px;
+    }
+    .navbar a {
+      color: #fff;
+      padding: 10px;
+      text-align: right;
+    }
+    .navbar a:hover {
+      text-decoration: none;
+    }
+    .navbar-nav > li > a:hover {
+      background-color: #f8f8f8;
+      color: #555;
+    }
+
+    body {
+      background-image: url("{% static 'images/background2.png' %}");
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+
+    .form-container {
+      margin-top: 50px;
+      margin-bottom: 50px;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    input[type=radio] {
+      margin-right: 10px;
+    }
+
+    input[type=text] {
+      margin-top: 5px;
+      margin-bottom: 10px;
+      width: 100%;
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    select {
+      margin-top: 5px;
+      margin-bottom: 10px;
+      width: 100%;
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    #submit {
+      margin-top: 20px;
+      background-color: #007bff;
+      border: none;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    #submit:hover {
+      background-color: #0069d9;
+    }
+
+    button a {
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    button a:hover {
+      text-decoration: underline;
+    }
+    .form-container {
+  opacity: 0.8; 
+  width: 50%; 
+  margin: auto; 
+  padding: 20px; 
+}
+
+label {
+  display: inline-block; 
+  margin-bottom: 10px; 
+}
+
+input[type="text"],
+input[type="email"],
+select {
+  width: 100%; 
+  padding: 10px; 
+  margin-bottom: 20px; 
+  border: none;
+  border-radius: 0;
+  border-bottom: 1px solid #ccc; 
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+  margin-right: 5px; 
+}
+
+.btn-primary {
+  background-color: #007bff; 
+  color: #fff; 
+  padding: 10px 20px; 
+  border-radius: 0; 
+  border: none;
+  margin-top: 20px; 
+}
+
+.btn-primary:hover {
+  background-color: #0069d9; 
+
+@media screen and (max-width: 768px) {
+  .form-container {
+    width: 100%; 
+  }
+}
+  </style>
+</head>
+
+<body class="container-fluid">
+
+  <nav class="navbar navbar-default">
+      <div class="container-fluid">
+          <ul class="nav navbar-nav navbar-right">
+              <li><a href={% url 'home' %}>Home</a></li>
+              <li><a href={% url 'contact' %}>Contact</a></li>
+              <li><a href={% url 'login' %}>Logout</a></li>
+          </ul>
+      </div>
+  </nav>
+
+  <div class="form-container">
+    <form action="{% url 'sym_map_view' %}" method="post">
+        {% csrf_token %}
+        <label for="location_type">Location Type:</label><br>
+        <input type="radio" id="current_address" name="location_type" value="Current_Address" onclick=getCurrentLocation()>
+        <label for="current_address">Current Address</label><br>
+        <input type="radio" id="enter_location" name="location_type" value="Enter_Location" required>
+        <label for="enter_location"required>Enter Location</label>
+          <input type="text" name="location">
+        <br>
+        <br>
+        <label for="gender">Gender</label><br>
+        <select name="gender" id="gender">
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Others">Others</option>
+        </select>
+        <label for="symptoms">Symptoms</label><br>
+        <input type="text", name="symptoms" placeholder="Enter the symptoms; Seperate by comma if multiple">
+        <br><br>
+        <label for="type">Hospital type</label>
+        <br>
+        <select id="type" name="type" required>
+            {% for type in types %}
+            <option value="{{type.0}}">{{type.0}}</option>
+            {% endfor %}
+          </select>
+          <br><br>
+          <label for="radius">Search Radius</label>
+          <br>
+          <select id="radius" name="radius" required>
+            <option value=1>1 km</option>
+            <option value=2>2 km</option>
+            <option value=3>3 km</option>
+            <option value=4>4 km</option>
+            <option value=5>5 km</option>
+            <option value=10>10 km</option>
+            <option value=15>15 km</option>
+            <option value=20>20 km</option>
+            <option value=0>Any</option>
+          </select>
+          <br><br>
+        <br><br>
+        <input id="submit" type="submit" value="Submit" class="btn btn-primary">
+      <input type="hidden" id="latitude" name="latitude">
+      <input type="hidden" id="longitude" name="longitude">
+      <br><br>
+    </form>
+    <br><br>
+    <button><a href="{% url 'search' %}">Search By Category</a></button>
+  </div>
+  <script>
+    
+function getCurrentLocation() {
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+            document.getElementById("latitude").value = latitude;
+            document.getElementById("longitude").value = longitude;
+        }, function(error) {
+            alert("Error: " + error.message);
+        });
+    } else {
+        alert("Geolocation is not supported by this browser.");
+    }
+}
+document.addEventListener("DOMContentLoaded", function() {
+    const locationInput = document.querySelector('input[name="location"]');
+    locationInput.style.display = 'none';
+
+    const enterLocationRadio = document.querySelector('input[value="Enter_Location"]');
+    enterLocationRadio.addEventListener("click", function() {
+      locationInput.style.display = 'block';
+     });
+
+    const currentAddressRadio = document.querySelector('input[value="Current_Address"]');
+    currentAddressRadio.addEventListener("click", function() {
+      locationInput.style.display = 'none';
+    });
+    });
+</script>
+</div>
+
+</body>

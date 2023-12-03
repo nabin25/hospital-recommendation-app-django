@@ -1,0 +1,67 @@
+{% load static %}
+<head>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      .navbar {
+        background: rgba(255, 255, 255, 0.5);
+        border: none;
+      }
+      .navbar-right {
+        padding-right: 20px;
+      }
+      .navbar a {
+        color: #fff;
+        padding: 10px;
+        text-align: right;
+      }
+      .navbar a:hover {
+        text-decoration: none;
+      }
+      .navbar-nav > li > a:hover {
+        background-color: #f8f8f8;
+        color: #555;
+      }
+      body {
+        background-image: url("{% static 'images/background2.png' %}");
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
+      .center-div {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      .btn-block {
+        padding: 10px;
+      }
+      #heading-text {
+        color: black;
+      }
+    </style>
+</head>
+<body class="container-fluid">
+  <nav class="navbar navbar-default">
+      <div class="container-fluid">
+          <ul class="nav navbar-nav navbar-right">
+              <li><a href={% url 'home' %}>Home</a></li>
+              <li><a href={% url 'contact' %}>Contact</a></li>
+              <li><a href={% url 'login' %}>Logout</a></li>
+          </ul>
+      </div>
+  </nav>
+  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 mx-auto bg-light p-4 my-4 center-div">
+    <h3 id="heading-text" class="text-center">HOSPITAL RECOMMENDATION SYSTEM</h3>
+    <p id="heading-text" class="text-center">Everyday we bring hope and smile to the patient we serve.</p>
+    <div class="text-center">
+      <a href="#" class="btn btn-primary">Learn more</a>
+    </div>
+    <hr>
+    <div class="text-center">
+      <a href={% url 'search' %} class="btn btn-info btn-block my-3">Search By Category</a>
+      <a href={% url 'search_by_sym' %} class="btn btn-info btn-block my-3">Search By Symptom</a>
+      <a href={% url 'preferences' %} class="btn btn-info btn-block my-3">View Preference List</a>
+      <a href={% url 'schedule' %} class="btn btn-info btn-block my-3">View Schedules</a>
+    </div>
+  </div>
+</body>

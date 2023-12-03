@@ -1,0 +1,52 @@
+{% extends 'hosp_rec_app/base.html' %}
+
+{% block content %}
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <h1>Schedule List</h1>
+      <hr>
+      <br>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Hospital</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for schedule in schedules %}
+          <tr>
+            <td>{{ schedule.date }}</td>
+            <td>{{ schedule.hosp }}</td>
+            <td>
+              <a href="{% url 'schedule_detail' pk=schedule.pk %}" class="btn btn-primary"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
+              <form action="{% url 'schedule_delete' pk=schedule.pk %}" method="POST" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Delete</button>
+              </form>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="3">No schedules found.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <br>
+      <hr>
+      <h3>Add Schedule</h3>
+      <br>
+      <form method="POST" class="form-inline">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> Add Schedule</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

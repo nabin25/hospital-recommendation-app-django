@@ -1,0 +1,134 @@
+
+{% load crispy_forms_tags %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+
+  <meta charset="utf-8">
+  <title>{{title}}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <!--style-->
+  <style>
+  .card {
+
+   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.5),
+               0 6px 20px 0 rgba(0,0,0,0.39);
+   background: lightblue;
+   margin-bottom : 5%;
+   border-radius: 25px;
+   padding : 2%;
+   overflow: auto;
+   resize: both;
+   text-overflow: ellipsis;
+  }
+  .card:hover{
+    background: lightpink;
+  }
+
+  .submit_form{
+
+    text-align: center;
+    padding: 3%;
+    background: lightblue;
+    border-radius: 25px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.4),
+                0 6px 20px 0 rgba(0,0,0,0.36);
+  }
+ 
+  .navbar {
+            background: rgba(255, 255, 255, 0.5);
+            border: none;
+        }
+    .navbar-right {
+    padding-right: 20px;
+    }
+    .navbar a {
+    color: #fff;
+    padding: 10px;
+    text-align: right;
+    }
+    .navbar a:hover {
+    text-decoration: none;
+    }
+    .navbar-nav > li > a:hover {
+    background-color: #f8f8f8; 
+    color: #555; 
+}
+
+
+
+body {
+background-image: url("{% static 'images/background2.png' %}");
+background-repeat: no-repeat;
+background-size: cover;
+}
+  </style>
+
+</head>
+
+<body  class="container-fluid">
+
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href={% url 'home' %}>Home</a></li>
+            <li><a href={% url 'contact' %}>Contact</a></li>
+            <li><a href={% url 'login' %}>Logout</a></li>
+          </ul>
+        </div>
+    </nav>
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-info">
+    <strong>{{message}}</strong>
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  <center class="row">
+    <h1><i>PREFERENCE LIST</i></h1>
+    <hr />
+  </center>
+
+  <div class="row">
+
+    <div class="col-md-8">
+    
+      {% for i in list %}
+      <div class="card">
+        <center><b>{{i.preferred_hosp}}</b></center>
+        <hr/>
+        
+        <br />
+        <br />
+        <form action="{% url 'preference_delete' i.id %}" method="post" style="padding-right: 4%; padding-bottom: 3%;">
+            {% csrf_token %}
+            <button value="remove" type="submit" class="btn btn-primary" style="float: right;"><span class="glyphicon glyphicon-trash"></span> &nbsp; remove</button>
+        </form>
+        
+      </div>
+      {% endfor%}
+      
+    </div>
+    <div class="col-md-1"> </div>
+    <div class="col-md-3" >
+      <div  class="submit_form">
+      <form  method="POST">
+        {% csrf_token %}
+        {{forms|crispy}}
+        <center>
+        <input type="submit" class="btn btn-default" value="submit" />
+      </center>
+      </form>
+    </div>
+  </div>
+</div>
+</body>
+
+</html>

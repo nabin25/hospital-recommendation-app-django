@@ -1,0 +1,170 @@
+
+{% load crispy_forms_tags %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+
+  <meta charset="utf-8">
+  <title>{{title}}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-maE67lLcRzmb+YpsdTtyQz15grhTJZfBmZztD06HB2nsD9/fTeWYml8la3q3m72LdTiLGYeWnNlU5e6gc5ISig==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" integrity="sha512-TiGLNozWo6tu5e6U5cBZ5XY0J9f0LyWjKvMw6P5fHzG/Bn2fNcaZaSxZebSXK52XHhdfnF4rb4Jz/4+chCjKsA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/leaflet/1.3.1/leaflet.css" />
+  <script src="https://cdn.jsdelivr.net/leaflet/1.3.1/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/leaflet.folium/leaflet.folium.js"></script>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+  <style>
+  .card {
+
+   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.5),
+               0 6px 20px 0 rgba(0,0,0,0.39);
+   background: lightblue;
+   margin-bottom : 5%;
+   border-radius: 25px;
+   padding : 2%;
+   overflow: auto;
+   resize: both;
+   text-overflow: ellipsis;
+  }
+  .card:hover{
+    background: lightpink;
+  }
+
+  .submit_form{
+
+    text-align: center;
+    padding: 3%;
+    background: lightblue;
+    border-radius: 25px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.4),
+                0 6px 20px 0 rgba(0,0,0,0.36);
+  }
+ 
+  .navbar {
+            background: rgba(255, 255, 255, 0.5);
+            border: none;
+        }
+    .navbar-right {
+    padding-right: 20px;
+    }
+    .navbar a {
+    color: #fff;
+    padding: 10px;
+    text-align: right;
+    }
+    .navbar a:hover {
+    text-decoration: none;
+    }
+    .navbar-nav > li > a:hover {
+    background-color: #f8f8f8; /* Change the background color on hover */
+    color: #555; /* Change the text color on hover */
+}
+
+body {
+background-image: url("{% static 'images/background2.png' %}");
+background-repeat: no-repeat;
+background-size: cover;
+}
+  </style>
+
+</head>
+
+<body  class="container-fluid">
+
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href={% url 'home' %}>Home</a></li>
+            <li><a href={% url 'contact' %}>Contact</a></li>
+            <li><a href={% url 'login' %}>Logout</a></li>
+          </ul>
+        </div>
+    </nav>
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-info">
+    <strong>{{message}}</strong>
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% if probable_disease %}
+  <h5><strong style="color: black;">Probable Disease: {{ probable_disease }}</strong></h5>
+<h5><strong style="color: black;">Related Category: {{ related_category }}</strong></h5>
+
+  {% endif %}
+  <center class="row">
+    <h1><i>Hospital List</i></h1>
+    <hr />
+  </center>
+  <div class="row">
+
+    <div class="col-md-8">
+    
+      {% for hospital in hospitals %}
+      <div class="card">
+        <div class="row no-gutters">
+          <div class="col-md-4">
+            <img src={{hospital.hosImage}} class="card-img" style="width: 100px; height: 100px; object-fit: cover;">
+          </div>
+          <div class="col-md-4">
+            <div class="card-body">
+              <h5 class="card-title">{{ hospital.hosName }}</h5>
+              <p class="card-text">{{ hospital.address }}</p>
+              <p class="card-text">{{ hospital.contact }}</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  
+                  <form action="{% url 'direction' %}" method="POST">  
+                    {% csrf_token %}              
+                    <input type="hidden" name="id" value={{hospital.hosId}}>
+                    <input type="hidden" name="latitude" value={{latitude}}>
+                    <input type="hidden" name="longitude" value={{longitude}}>
+                    <button type="submit"><span class="glyphicon glyphicon-map-marker"></span></button>
+                  </form> 
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {% endfor%}
+      
+    </div>
+  </div>
+  <button id="show-map-button">Show Map</button>
+  <div id="map-popup" style="display:none; border-radius: 10px;">
+    {{ map|safe }}
+  </div>
+  </div>
+</div>
+<script>
+  $(document).ready(function() {
+    $("#show-map-button").click(function() {
+      // Create a dialog box with the map inside
+      $("#map-popup").dialog({
+        width: "40%",
+        height: "auto",
+        modal: true,
+        buttons: {
+          "Close": function() {
+            $(this).dialog("close");
+          }
+        }
+      });
+    });
+  });
+</script>
+</body>
+
+</html>

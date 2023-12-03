@@ -1,0 +1,88 @@
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  
+    <style>
+      body {
+        background-color: #f4f6f9;
+      }
+      
+      h2 {
+        color: #2c3e50;
+      }
+      
+      form {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        margin-top: 50px;
+        margin-bottom: 50px;
+      }
+      
+      button[type="submit"] {
+        background-color: #1abc9c;
+        border: none;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+      
+      button[type="submit"]:hover {
+        background-color: #16a085;
+      }
+      
+      label {
+        color: #2c3e50;
+      }
+      
+      input[type="text"], input[type="password"] {
+        border: 1px solid #ccc;
+        padding: 10px;
+        border-radius: 5px;
+        width: 100%;
+        margin-bottom: 20px;
+        transition: border-color 0.3s ease;
+      }
+      
+      input[type="text"]:focus, input[type="password"]:focus {
+        border-color: #1abc9c;
+      }
+      
+      .form-group {
+        margin-bottom: 0;
+      }
+      
+      .register-link, .forgot-password-link, .login-link {
+        display: inline-block;
+        margin-top: 10px;
+        color: #1abc9c;
+        font-size: 14px;
+      }
+      
+      .register-link:hover, .forgot-password-link:hover, .login-link:hover {
+        text-decoration: none;
+        color: #16a085;
+      }
+    </style>
+  </head>
+  
+  <body>
+    <div class="container">
+      <h2>Register</h2>
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="form-group">
+          <button type="submit">Register</button>
+          <a href={% url 'login' %} class="login-link ml-3">Login</a>
+        </div>
+      </form>
+    </div>
+  </body>
+  
