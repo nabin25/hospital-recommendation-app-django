@@ -3,7 +3,6 @@ from .models import Hospital,UserResponse,Preference,Schedule
 import folium
 import geocoder
 import requests
-import os
 import openai
 from django.contrib.auth.views import PasswordResetConfirmView
 from django.contrib.auth.decorators import login_required
@@ -11,6 +10,10 @@ from .forms import ScheduleForm, PreferenceForm
 from django.contrib import messages
 from django.http import HttpResponseBadRequest
 import math
+from django.shortcuts import render, redirect
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import login, logout
+from .forms import CustomUserCreationForm
 
 openai.api_key = 'YOUR_API_KEY'
 
@@ -25,7 +28,7 @@ def get_category(probable_disease):
         engine="davinci",
         prompt=prompt,
         max_tokens=5,
-        temperature=2
+        temperature=0.1
     )
 
     recommended_category = response.choices[0].text.strip()
@@ -276,7 +279,6 @@ def sym_map_view(request):
     
     return render(request, "hosp_rec_app/search_by_sym.html",{ 'types':Hospital.TYPES,'cats':Hospital.CAT} )
 
-from django.http import HttpResponseBadRequest
 
 def direction(request):
     if request.method == 'POST':
@@ -309,11 +311,6 @@ def direction(request):
     folium.Marker(location=end_point, tooltip="End").add_to(map)
     folium.PolyLine(coordinates, color='blue').add_to(map)
     return render(request, 'hosp_rec_app/direction.html', {'map': map._repr_html_()})
-
-from django.shortcuts import render, redirect
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import authenticate, login, logout
-from .forms import CustomUserCreationForm
 
 def register_view(request):
     if request.method == 'POST':
