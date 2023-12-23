@@ -1,6 +1,6 @@
 # Hospital recommendation system
 
-> - This is a project carried out as **Minor Project* under the curriculum.
+> - This is a project carried out as ***Minor Project*** under the curriculum.
 
 > - The user can search for *hospitals* within their preferred *search radius*
 
