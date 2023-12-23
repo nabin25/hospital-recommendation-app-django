@@ -1,5 +1,7 @@
 # Hospital recommendation system
 
+***
+
 > - This is a project carried out as ***Minor Project*** under the curriculum.
 
 > - The user can search for *hospitals* within their preferred *search radius*
@@ -13,3 +15,7 @@
 > - The user can also add their *Schedule* to visit the hospital.
 
 > - The user can add a hospital to **Preference list** after which the hospital will be listed on top if it satisfies the user's search criteria
+
+***
+
+*Make sure to add your OpenAI and Open Route Service API key for the full functioning of the project*
