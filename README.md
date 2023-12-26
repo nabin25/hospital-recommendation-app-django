@@ -23,7 +23,9 @@ To run the application run the following commands (*Make sure you have python an
   ```git clone https://github.com/nabin25/hospital-recommendation-app-django.git```
 
 > - cd inside the cloned folder and make a python virtual environment using the following command
-  ```virtualenv <env_name>```
+  ```virtualenv <env_name>```<br/>
+  If virtualenv is not installed run `pip install virtualenv`
+
 
 > - activate the virtual environment by running following code
     ```<env_name>/Scripts/activate```
@@ -31,8 +33,8 @@ To run the application run the following commands (*Make sure you have python an
 > - Install the requirements using the given command
     ```pip install -r requirement.txt```
 
-> - Run the following command to make migrations and apply those changes in database
-    ```python manage.py makemigrations```
+> - Run the following command to make migrations and apply those changes in database<br/>
+    ```python manage.py makemigrations```<br/>
     ```python manage.py migrate```
 
 > - To create a superuser use the command and enter the credentials
