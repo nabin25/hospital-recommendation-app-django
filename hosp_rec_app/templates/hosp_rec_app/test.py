@@ -14,7 +14,7 @@ CAT = (
   ('Nephrology','Nephrology'),
 )
 
-os.environ['OPENAI_API_KEY'] = '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'
+os.environ['OPENAI_API_KEY'] = 'key_here'
 openai.api_key = os.getenv("OPENAI_API_KEY")
 print(openai.api_key)
 
